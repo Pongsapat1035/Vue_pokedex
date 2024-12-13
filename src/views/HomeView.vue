@@ -19,7 +19,7 @@ onMounted(async () => {
 const showDetail = (pokemonData) => {
     const detailCard = document.getElementById('detail-card')
     console.log(pokemonData)
-    detailCard.style.display = 'block'
+    detailCard.style.display = 'flex'
 
 }
 
@@ -49,7 +49,7 @@ const dropdownList = [
 </script>
 <template>
     <div class="container mx-auto h-screen p-10 flex">
-        <div class="w-2/4">
+        <div class="w-full lg:w-2/4">
             <!-- Search input -->
             <div class="px-5 py-3 bg-white rounded-lg shadow-lg flex gap-5">
                 <input class="flex-1 text-l px-2  outline-none" type="text" placeholder="Search your pokemon">
@@ -61,7 +61,7 @@ const dropdownList = [
                 </button>
             </div>
             <!-- Sort -->
-            <div class="flex justify-between items-end my-5 p-5">
+            <div class="flex justify-between items-center my-5 p-5">
                 <div>
                     <select class="bg-transparent text-base font-bold">
                         <option class="text-base font-bold" value="asc">Accending</option>
@@ -78,7 +78,7 @@ const dropdownList = [
                 </div>
             </div>
             <!-- Filter -->
-            <div class="flex p-5 gap-5">
+            <div class="flex p-5 gap-5 flex-wrap">
                 <div class="bg-white px-3 py-2 rounded-lg shadow-sm" v-for="item in dropdownList">
                     <select class="text-sm font-bold text-gray-500 rounded-lg outline-none ">
                         <option class="text-sm font-bold" selected disabled value="asc">{{ item.name }}</option>
@@ -93,11 +93,31 @@ const dropdownList = [
                 </div>
             </div>
             <!-- Card container -->
-            <div class="grid grid-cols-3 gap-x-10 gap-y-20 py-14">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-20 py-14">
                 <Card :name="pokemon.name" :id="pokemon.id" :imgUrl="pokemon.imgUrl" :types="pokemon.types"
                     v-for="pokemon in pokemonList" @click="showDetail(pokemon)"></Card>
             </div>
         </div>
-        <DetailCard id="detail-card" class="hidden"></DetailCard>
+
     </div>
+    <DetailCard id="detail-card" class="hidden"></DetailCard>
 </template>
+
+<style>
+html {
+    font-size: 14px;
+}
+
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+@media (min-width: 1024px) {
+    html {
+        font-size: 16px;
+    }
+}
+</style>

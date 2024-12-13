@@ -12,7 +12,7 @@ defineProps({
 
 <template>
     <div class="bg-white shadow-md rounded-2xl flex justify-center items-center flex-col gap-2 relative py-6 cursor-pointer">
-        <img class="absolute -top-14"
+        <img class="absolute -top-14 w-24 h-24"
             :src="imgUrl">
         <p class="font-bold text-slate-500 text-sm pt-4">#{{ id }}</p>
         <h1 class="font-bold text-xl text-[#001130]">{{ name }}</h1>
