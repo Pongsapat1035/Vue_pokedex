@@ -64,13 +64,13 @@ const closeDetail = () => {
                 <div class="flex flex-col items-center w-full">
                     <span class="font-bold">HEIGHT</span>
                     <div class="bg-[#f7f8fd] py-2 px-4 rounded-3xl text-center font-semibold mt-2 flex-1 w-full">
-                        {{ data.height }}
+                        {{ data.height }} ft.
                     </div>
                 </div>
                 <div class="flex flex-col items-center w-full">
                     <span class="font-bold">WEIGHT</span>
                     <div class="bg-[#f7f8fd] py-2 px-4 rounded-3xl font-semibold text-center mt-2 flex-1 w-full">
-                        {{ data.weight }}
+                        {{ data.weight }} lbs.
                     </div>
                 </div>
                 <div class="flex flex-col items-center w-full">
