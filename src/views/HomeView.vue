@@ -1,50 +1,58 @@
 <script setup>
+
+//https://dribbble.com/shots/15128634-Pokemon-Pokedex-Website-Redesign-Concept/attachments/6864101?mode=media
+
 import Card from '../component/Card.vue'
-
 import DetailCard from '../component/DetailCard.vue';
-
+import FilterTab from '../component/FilterTab.vue';
 import { usePokemonStore } from '../store/pokemonStore';
 
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 
 const pokemonStore = usePokemonStore()
+
 const pokemonList = ref([])
+const stats = ref([])
+let pageIndex = ref(1)
+const selectPokemon = reactive({
+    abilities: '',
+    baseExp: '',
+    height: '',
+    id: '',
+    imgUrl: '',
+    name: '',
+    types: '',
+    weight: '',
+    stats: []
+})
+
+const searchPokemonText = ref("")
+
 onMounted(async () => {
     await pokemonStore.loadData()
-    console.log(pokemonStore.lists)
-    pokemonList.value = pokemonStore.lists
-    // await pokemonStore.loadAllData()
+    pokemonList.value = pokemonStore.loadPagination(pageIndex.value)
+    await pokemonStore.loadAllData()
 })
+
+const loadPagination = (mode) => {
+    mode === 'next' ? pageIndex.value += 1 : pageIndex.value -=1
+    pokemonList.value = pokemonStore.loadPagination(pageIndex.value)
+}
 
 const showDetail = (pokemonData) => {
     const detailCard = document.getElementById('detail-card')
-    console.log(pokemonData)
+    for (let data in pokemonData) {
+        selectPokemon[data] = pokemonData[data]
+    }
     detailCard.style.display = 'flex'
-
 }
 
-const dropdownList = [
-    {
-        name: 'Type',
-        data: ['a', 'b', 'c']
-    },
-    {
-        name: 'Weaknesses',
-        data: ['a', 'b', 'c']
-    },
-    {
-        name: 'Ability',
-        data: ['a', 'b', 'c']
-    },
-    {
-        name: 'Height',
-        data: ['a', 'b', 'c']
-    },
-    {
-        name: 'Weight',
-        data: ['a', 'b', 'c']
-    }
-]
+const searchPokemon = () => {
+    console.log(pokemonList.value)
+    pokemonList.value = pokemonStore.lists.forEach(el => {
+        
+    })
+}
 
 </script>
 <template>
@@ -52,7 +60,10 @@ const dropdownList = [
         <div class="w-full lg:w-2/4">
             <!-- Search input -->
             <div class="px-5 py-3 bg-white rounded-lg shadow-lg flex gap-5">
-                <input class="flex-1 text-l px-2  outline-none" type="text" placeholder="Search your pokemon">
+                <input class="flex-1 text-l px-2  outline-none" type="text" placeholder="Search your pokemon" 
+                v-model="searchPokemonText"
+                @keyup="searchPokemon"
+                >
                 <button class="bg-[#ff5251] rounded-lg p-2 shadow-3xl shadow-[#ff5251]">
                     <div class="w-9 h-9 border-8 border-white rounded-full flex justify-center items-center">
                         <div class="w-3 h-3 bg-white rounded-full">
@@ -77,30 +88,30 @@ const dropdownList = [
                         type="number">
                 </div>
             </div>
-            <!-- Filter -->
-            <div class="flex p-5 gap-5 flex-wrap">
-                <div class="bg-white px-3 py-2 rounded-lg shadow-sm" v-for="item in dropdownList">
-                    <select class="text-sm font-bold text-gray-500 rounded-lg outline-none ">
-                        <option class="text-sm font-bold" selected disabled value="asc">{{ item.name }}</option>
-                        <option class="text-sm font-bold" value="asc" v-for="listData in item.data">{{ listData }}
-                        </option>
-                    </select>
-                </div>
-                <div class="flex items-center">
-                    <button class="bg-slate-500	rounded-lg p-2">
-                        <img src="../component/icons/resetIcon.svg" alt="">
-                    </button>
-                </div>
-            </div>
+            <FilterTab></FilterTab>
             <!-- Card container -->
             <div class="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-20 py-14">
                 <Card :name="pokemon.name" :id="pokemon.id" :imgUrl="pokemon.imgUrl" :types="pokemon.types"
                     v-for="pokemon in pokemonList" @click="showDetail(pokemon)"></Card>
             </div>
+            <div class="flex gap-4 pb-5 px-1 items-center">
+                <div class="min-w-10">
+                    <button v-if="pageIndex > 1" class="cursor-pointer bg-slate-200 p-2 rounded-full flex justify-center" @click="loadPagination('previous')" id="pagination_back-btn">
+                        <img  src="../component/icons/previous-arrow.svg" alt="previous-arrow">
+                    </button>
+                </div>
+                <div>
+                    {{ pageIndex }} <span class="font-semibold mx-1">of</span> {{ pokemonStore.totalPage }}
+                </div>
+                <div>
+                    <button v-if="pageIndex < pokemonStore.totalPage" class="cursor-pointer bg-slate-200 p-2 rounded-full" @click="loadPagination('next')" id="pagination_next-btn">
+                        <img src="../component/icons/next-arrow.svg" alt="previous-arrow">
+                    </button>
+                </div>
+            </div>
         </div>
-
     </div>
-    <DetailCard id="detail-card" class="hidden"></DetailCard>
+    <DetailCard id="detail-card" :data="selectPokemon" :stats="stats" class="hidden"></DetailCard>
 </template>
 
 <style>
