@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import HomeView from '../views/HomeView.vue'
-import DetailView from '../views/DetailView.vue'
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -9,11 +9,7 @@ const router = createRouter({
         {
             path: '/',
             component: HomeView
-        },
-        {
-            path: '/detail',
-            component: DetailView
-        },
+        }
     ]
 
 })

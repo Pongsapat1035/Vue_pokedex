@@ -87,26 +87,44 @@ export const usePokemonStore = defineStore('pokemonStore', {
             this.filterList = result
         },
         clearFilter() {
-            // console.log(this.getHeightType(12))
+            // default value
             this.filterList = this.lists
             this.panination.perPage = 12
             this.panination.startIndex = 0
             this.panination.endIndex = 12
-            // console.log(this.filterList)
+        },
+        selectByLength(startIndex, endIndex) {
+            
+        },
+        sortPokemon(sortText) {
+            if (sortText === 'asc') {
+                this.filterList.sort((a, b) => a.id - b.id)
+            } else if (sortText === 'desc') {
+                this.filterList.sort((a, b) => b.id - a.id)
+            }
         },
         filterPokemon(query) {
             this.clearFilter()
-            if (query.searchText === '' &&
+            // query text is empty
+            if (
+                query.searchText === '' &&
                 query.Type === '' &&
                 query.Height === '' &&
-                query.Weight === ''
+                query.Weight === '' 
             ) {
                 return
             }
             this.panination.pageIndex = 1
             // filter ทีเดียวหมด
-            console.log('recieved : ', query)
+            console.log('query recieved : ', query)
             let result = []
+
+            if (query.sort === 'asc') {
+                result = this.filterList.sort((a, b) => a.id - b.id)
+            } else if (query.sort === 'desc') {
+                result = this.filterList.sort((a, b) => b.id - a.id)
+            }
+
             if (query.searchText !== '') {
                 query.searchText = query.searchText.toUpperCase()
                 result = this.filterList.filter(pokemon => pokemon.name.includes(query.searchText) || pokemon.id.includes(query.searchText))

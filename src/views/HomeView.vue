@@ -12,7 +12,7 @@ import { onMounted, ref, reactive, watch } from 'vue';
 const pokemonStore = usePokemonStore()
 
 const stats = ref([])
-let pageIndex = ref(1)
+
 const selectPokemon = reactive({
     abilities: '',
     baseExp: '',
@@ -42,6 +42,8 @@ const dropdownList = [
     }
 ]
 
+const isLoading = ref(true)
+
 const queryText = reactive({
     searchText: '',
     Type: '',
@@ -49,11 +51,19 @@ const queryText = reactive({
     Weight: ''
 })
 
+const sortText = ref('asc')
+
 const searchPokemonText = ref("")
 
 onMounted(async () => {
-    await pokemonStore.loadData()
-    await pokemonStore.loadAllData()
+    try {
+        await pokemonStore.loadData()
+        await pokemonStore.loadAllData()
+        isLoading.value = false
+    } catch (error) {
+        console.log(error)
+    }
+
 })
 
 const loadPagination = (mode) => {
@@ -76,10 +86,12 @@ const clearInputFilter = () => {
     pokemonStore.clearFilter()
 }
 
+watch(sortText, (newSort) => pokemonStore.sortPokemon(newSort))
+
 watch(queryText, (value) => {
     // console.log(value)
     pokemonStore.filterPokemon(value)
-})
+}, { deep: true })
 
 </script>
 <template>
@@ -97,29 +109,33 @@ watch(queryText, (value) => {
                 </button>
             </div>
             <!-- Sort -->
-            <div class="flex justify-between items-center my-5 p-5">
+            <div class="my-5 p-5">
                 <div>
-                    <select class="bg-transparent text-base font-bold">
-                        <option class="text-base font-bold" value="asc">Accending</option>
+                    <select class="bg-transparent text-base font-bold" v-model="sortText">
+                        <option class="text-base font-bold" value="asc">Ascending</option>
                         <option class="text-base font-bold" value="desc">Descending</option>
                     </select>
                 </div>
-                <div class="flex gap-5 items-center">
+                <!-- <div class="flex gap-5 items-center">
                     <span class="text-base font-bold">from</span>
                     <input class="text-sm font-bold  w-24 p-3 text-center bg-transparent border rounded-lg"
                         type="number">
                     <span class="text-base font-bold">to</span>
                     <input class="text-sm font-bold w-24 p-3 text-center bg-transparent border rounded-lg"
                         type="number">
-                </div>
+                </div> -->
             </div>
             <div class="flex p-5 gap-5 flex-wrap justify-between">
                 <div class="flex gap-5">
-                    <div class="bg-white px-3 py-2 rounded-lg shadow-sm" v-for="item in dropdownList">
+                    <div class="bg-white px-3 py-2 rounded-lg shadow-sm flex gap-2 items-center"
+                        v-for="item in dropdownList">
+                        <span class="font-bold">
+                            {{ item.name }}
+                        </span>
                         <select class="text-sm font-bold text-gray-500 rounded-lg outline-none "
                             v-model="queryText[item.name]">
-                            <option class="text-sm font-bold" selected disabled value="asc">{{ item.name }}</option>
-                            <option class="text-sm font-bold" :value="listData" v-for="listData in item.data">{{
+                            <option class="text-sm font-bold" selected disabled>{{ item.name }}</option>
+                            <option v-for="listData in item.data" class="text-sm font-bold" :value="listData">{{
                                 listData }}
                             </option>
                         </select>
@@ -133,7 +149,10 @@ watch(queryText, (value) => {
             </div>
             <!-- Card container -->
             <div class="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-20 py-14">
-                <Card :name="pokemon.name" :id="pokemon.id" :imgUrl="pokemon.imgUrl" :types="pokemon.types"
+                <div class="col-start-1 col-end-4 font-bold text-center text-2xl" v-if="isLoading">
+                    Pokemon is Loading...
+                </div>
+                <Card v-else :name="pokemon.name" :id="pokemon.id" :imgUrl="pokemon.imgUrl" :types="pokemon.types"
                     v-for="pokemon in pokemonStore.pokemonList" @click="showDetail(pokemon)"></Card>
             </div>
             <div class="flex gap-4 pb-5 px-1 items-center">
@@ -145,7 +164,8 @@ watch(queryText, (value) => {
                     </button>
                 </div>
                 <div>
-                    {{ pokemonStore.panination.pageIndex }} <span class="font-semibold mx-1">of</span> {{ pokemonStore.totalPage }}
+                    {{ pokemonStore.panination.pageIndex }} <span class="font-semibold mx-1">of</span> {{
+                        pokemonStore.totalPage }}
                 </div>
                 <div>
                     <button v-if="pokemonStore.panination.pageIndex < pokemonStore.totalPage"
