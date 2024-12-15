@@ -93,6 +93,14 @@ watch(queryText, (value) => {
     pokemonStore.filterPokemon(value)
 }, { deep: true })
 
+const gotoPageIndex = ref()
+watch(gotoPageIndex, (newPage) => {
+    if (newPage > pokemonStore.totalPage) {
+        gotoPageIndex.value = pokemonStore.totalPage
+    }
+    pokemonStore.panination.pageIndex = newPage
+    pokemonStore.loadPagination()
+})
 </script>
 <template>
     <div class="container mx-auto h-screen p-10 flex">
@@ -109,21 +117,21 @@ watch(queryText, (value) => {
                 </button>
             </div>
             <!-- Sort -->
-            <div class="my-5 p-5">
+            <div class="my-5 p-5 flex justify-between items-center">
                 <div>
                     <select class="bg-transparent text-base font-bold" v-model="sortText">
                         <option class="text-base font-bold" value="asc">Ascending</option>
                         <option class="text-base font-bold" value="desc">Descending</option>
                     </select>
                 </div>
-                <!-- <div class="flex gap-5 items-center">
-                    <span class="text-base font-bold">from</span>
+                <div class="flex gap-5 items-center ">
+                    <span class="text-base font-bold">Go to page</span>
                     <input class="text-sm font-bold  w-24 p-3 text-center bg-transparent border rounded-lg"
-                        type="number">
-                    <span class="text-base font-bold">to</span>
+                        type="number" min="1" :max="pokemonStore.totalPage" v-model="gotoPageIndex">
+                    <!-- <span class="text-base font-bold">to</span>
                     <input class="text-sm font-bold w-24 p-3 text-center bg-transparent border rounded-lg"
-                        type="number">
-                </div> -->
+                        type="number"> -->
+                </div>
             </div>
             <div class="flex p-5 gap-5 flex-wrap justify-between">
                 <div class="flex gap-5">
@@ -164,8 +172,9 @@ watch(queryText, (value) => {
                     </button>
                 </div>
                 <div>
-                    {{ pokemonStore.panination.pageIndex }} <span class="font-semibold mx-1">of</span> {{
-                        pokemonStore.totalPage }}
+                    {{ pokemonStore.panination.pageIndex }}
+                    <span class="font-semibold mx-1">of</span>
+                    {{ pokemonStore.totalPage }}
                 </div>
                 <div>
                     <button v-if="pokemonStore.panination.pageIndex < pokemonStore.totalPage"

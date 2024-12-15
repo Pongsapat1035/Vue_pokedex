@@ -45,7 +45,7 @@ const closeDetail = () => {
     <div class="w-full h-full flex justify-center items-center top-0 left-0 bg-gray-800/50 
      lg:bg-transparent lg:justify-start lg:items-start lg:w-1/2 lg:left-1/2 lg:top-24 lg:mx-20 
      flex-1 fixed ">
-        <div class="relative w-2/3 max-w-sm flex flex-col items-center rounded-3xl gap-4 bg-white shadow-lg p-16">
+        <div class="relative w-2/3 max-w-sm flex flex-col items-center rounded-3xl gap-4 bg-white shadow-lg py-14 px-12">
             <img class="w-32 absolute -top-14"
                 :src="data.imgUrl">
             <h1 class="font-bold text-2xl">{{ data.name }}</h1>
