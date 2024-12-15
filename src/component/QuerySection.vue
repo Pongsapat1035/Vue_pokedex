@@ -77,21 +77,22 @@ watch(queryText, (value) => pokemonStore.filterPokemon(value), { deep: true })
     </div>
     <div class="flex p-5 gap-5 flex-wrap justify-between">
         <div class="flex gap-5">
-            <div class="bg-white px-3 py-2 rounded-lg shadow-sm flex gap-2 items-center" v-for="item in dropdownList">
+            <div class="bg-white px-3 py-2 rounded-lg shadow-sm flex flex-wrap md:flex-nowrap justify-center gap-2 items-center " v-for="item in dropdownList">
                 <span class="font-bold">
                     {{ item.name }}
                 </span>
                 <select class="text-sm font-bold text-gray-500 rounded-lg outline-none " v-model="queryText[item.name]">
-                    <option class="text-sm font-bold" selected disabled>{{ item.name }}</option>
-                    <option v-for="listData in item.data" class="text-sm font-bold" :value="listData">{{
+                    <!-- <option class="text-sm font-bold" selected disabled>{{ item.name }}</option> -->
+                    <option v-for="listData in item.data" class="text-sm font-bold text-center" :value="listData">{{
                         listData }}
                     </option>
                 </select>
             </div>
         </div>
-        <div class="flex items-center">
-            <button class="bg-slate-500	rounded-lg p-2" @click="clearInputFilter">
-                <img src="../component/icons/resetIcon.svg" alt="">
+        <div class="flex items-center justify-end flex-1">
+            <button class="bg-red-400 border border-red-400 rounded-lg p-2 font-semibold text-white text-sm" @click="clearInputFilter">
+                <!-- <img src="../component/icons/resetIcon.svg" alt=""> -->
+                Clear
             </button>
         </div>
     </div>

@@ -45,7 +45,7 @@ const showDetail = (pokemonData) => {
 
 </script>
 <template>
-    <div class="container mx-auto h-screen p-10 flex">
+    <div class="container mx-auto h-screen py-10 px-6 md:px-10 flex">
         <div class="w-full lg:w-2/4">
             <QuerySection></QuerySection>
             <!-- Card container -->
@@ -61,21 +61,3 @@ const showDetail = (pokemonData) => {
     </div>
     <DetailCard id="detail-card" :data="selectPokemon" :stats="stats" class="hidden"></DetailCard>
 </template>
-<style>
-html {
-    font-size: 14px;
-}
-
-
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}
-
-@media (min-width: 1024px) {
-    html {
-        font-size: 16px;
-    }
-}
-</style>
