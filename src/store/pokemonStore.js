@@ -76,7 +76,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
             }
             return pokemonData
         },
-        loadPagination() {
+        loadPage() {
             const currectPage = this.panination.pageIndex
             this.panination.startIndex = (currectPage - 1) * this.panination.perPage
             this.panination.endIndex = this.panination.startIndex + this.panination.perPage
