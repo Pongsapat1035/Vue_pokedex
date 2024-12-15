@@ -7,8 +7,6 @@ import DetailCard from '../component/DetailCard.vue';
 import Pagination from '../component/Pagination.vue';
 import QuerySection from '../component/QuerySection.vue';
 
-
-
 const pokemonStore = usePokemonStore()
 
 const selectPokemon = reactive({
@@ -28,8 +26,8 @@ const isLoading = ref(true)
 onMounted(async () => {
     try {
         await pokemonStore.loadData()
-        await pokemonStore.loadAllData()
         isLoading.value = false
+        await pokemonStore.loadAllData()
     } catch (error) {
         console.log(error)
     }

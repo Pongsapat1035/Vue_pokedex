@@ -8,7 +8,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
         lists: [],
         filterList: [],
         limit: 300,
-        offset: 20,
+        offset: 100,
         panination: {
             pageIndex: 1,
             perPage: 12,
@@ -31,7 +31,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
     actions: {
         async loadData() {
             try {
-                const response = await axios.get(`${BASE_URL}/pokemon?limit=20&offset=0`)
+                const response = await axios.get(`${BASE_URL}/pokemon?limit=100&offset=0`)
                 const nameList = response.data.results
                 const promise = nameList.map((el) => this.loadDetail(el.url))
                 const pokemonList = await Promise.all(promise)
@@ -56,6 +56,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
                 }
                 this.filterList = this.lists
                 console.log('load all data complete data range: ', this.lists.length)
+
             } catch (error) {
                 console.log(error)
             }
@@ -94,7 +95,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
             this.panination.endIndex = 12
         },
         selectByLength(startIndex, endIndex) {
-            
+
         },
         sortPokemon(sortText) {
             if (sortText === 'asc') {
@@ -110,7 +111,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
                 query.searchText === '' &&
                 query.Type === '' &&
                 query.Height === '' &&
-                query.Weight === '' 
+                query.Weight === ''
             ) {
                 return
             }
