@@ -43,18 +43,30 @@ const showDetail = (pokemonData) => {
 
 </script>
 <template>
-    <div class="container mx-auto h-screen py-10 px-6 md:px-10 flex">
+    <div class="container mx-auto h-screen py-10 px-4 sm:px-6 md:px-10 flex">
         <div class="w-full lg:w-2/4">
             <QuerySection></QuerySection>
             <!-- Card container -->
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-20 py-14">
-                <div class="col-start-1 col-end-4 font-bold text-center text-2xl" v-if="isLoading">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-x-5 sm:gap-x-10 gap-y-20 py-14">
+                <!-- <div class="col-start-1 col-end-4 font-bold text-center text-2xl" >
                     Pokemon is Loading...
+                </div> -->
+                <div v-for="i in 12" v-if="isLoading" class="p-5 rounded-xl bg-slate-100 h-48 flex flex-col gap-4">
+                    <div class="h-2/3 bg-slate-200 rounded-md"></div>
+                    <div class="h-1/4 bg-slate-200 rounded-md"></div>
+                    <div class="h-1/4 w-1/2 bg-slate-200 rounded-md"></div>
                 </div>
                 <Card v-else :name="pokemon.name" :id="pokemon.id" :imgUrl="pokemon.imgUrl" :types="pokemon.types"
                     v-for="pokemon in pokemonStore.pokemonList" @click="showDetail(pokemon)"></Card>
             </div>
             <Pagination></Pagination>
+        </div>
+        <div v-if="pokemonStore.loadingState" class="fixed bottom-5 right-5 bg-slate-100 shadow-lg p-5 rounded-xl">
+            <div class="flex gap-2">
+                <span class="loading loading-spinner loading-md"></span>
+                <h3 class="font-bold">Loading</h3>
+                <h3>{{ pokemonStore.loadingPercent }}%</h3>
+            </div>
         </div>
     </div>
     <DetailCard id="detail-card" :data="selectPokemon" :stats="stats" class="hidden"></DetailCard>

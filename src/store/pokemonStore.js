@@ -7,14 +7,15 @@ export const usePokemonStore = defineStore('pokemonStore', {
     state: () => ({
         lists: [],
         filterList: [],
-        limit: 300,
+        limit: 100,
         offset: 100,
         panination: {
             pageIndex: 1,
             perPage: 12,
             startIndex: 0,
             endIndex: 12
-        }
+        },
+        loadingState: false
     }),
     getters: {
         totalPage: (state) => Math.ceil(state.filterList.length / state.panination.perPage),
@@ -27,6 +28,10 @@ export const usePokemonStore = defineStore('pokemonStore', {
 
         getWeightType: (state) => (weight) => weight >= 500 ? 'Heavy' : weight >= 100 ? 'Medium' : 'Light',
         filterWeight: (state) => (data, query) => data.filter(pokemon => state.getWeightType(pokemon.weight) === query),
+
+        loadingPercent: (state) => { 
+            return Math.floor(state.lists.length / 1302 * 100)
+        }
     },
     actions: {
         async loadData() {
@@ -38,6 +43,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
                 this.lists = this.lists.concat(pokemonList)
                 this.filterList = this.lists
                 console.log('load first data complete : ', this.lists.length)
+               
                 console.log(this.lists)
             } catch (error) {
                 console.log(error)
@@ -46,6 +52,7 @@ export const usePokemonStore = defineStore('pokemonStore', {
         },
         async loadAllData() {
             try {
+                this.loadingState = true
                 for (let i = 100; i < 1500; i += this.limit) {
                     const response = await axios.get(`${BASE_URL}/pokemon?limit=${this.limit}&offset=${this.offset}`)
                     const nameList = response.data.results
@@ -53,10 +60,11 @@ export const usePokemonStore = defineStore('pokemonStore', {
                     const pokemonList = await Promise.all(promise)
                     this.offset += this.limit
                     this.lists = this.lists.concat(pokemonList)
+                    console.log('loading : ', this.lists.length)
+                    this.filterList = this.lists
                 }
-                this.filterList = this.lists
+                this.loadingState = false
                 console.log('load all data complete data range: ', this.lists.length)
-
             } catch (error) {
                 console.log(error)
             }
