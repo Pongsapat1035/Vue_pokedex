@@ -27,7 +27,7 @@ const loadPagination = (mode) => {
             <button v-if="pokemonStore.panination.pageIndex < pokemonStore.totalPage"
                 class="cursor-pointer bg-slate-200 p-2 rounded-full" @click="loadPagination('next')"
                 id="pagination_next-btn">
-                <img src="./icons/next-arrow.svg" alt="previous-arrow">
+                <img src="./icons/next-arrow.svg" alt="next-arrow">
             </button>
         </div>
     </div>

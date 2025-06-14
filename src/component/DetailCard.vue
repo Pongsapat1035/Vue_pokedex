@@ -3,7 +3,6 @@ import TypeBadge from '../component/TypeBadge.vue';
 
 const props = defineProps({
     data: Object,
-    // stats: Array
 })
 
 const statsColorConfig = [
@@ -38,7 +37,8 @@ const closeDetail = () => {
     detailContainer.style.display = 'none'
 }
 
-// console.log('data from component ', props.data.stats)
+// console.log('check recievd data : ', props.data)
+
 </script>
 
 <template>
